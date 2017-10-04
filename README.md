@@ -1,14 +1,11 @@
 # zpool-scrub
+
 systemd zpool scrub service and timer
 
 ## Installation
 
-### Arch Linux
-You can use the `systemd-zpool-scrub` AUR package.
+Run `make install` to install unit files and reload systemd daemon.
 
-### Linux
-    install -m 644 -o root -g root zpool-scrub@.service /etc/systemd/system
-    install -m 644 -o root -g root zpool-scrub@.timer /etc/systemd/system
+Afterwards enable the timer, specifying your pool:
 
-    systemctl daemon-reload
     systemctl enable --now zpool-scrub@tank.timer
