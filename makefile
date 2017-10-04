@@ -9,5 +9,6 @@ install:
 	install $(mode) zpool-scrub@.service $(systemd)
 	install $(mode) zpool-scrub@.timer   $(systemd)
 	systemctl daemon-reload
+	@echo -e "Now enable for pool 'tank' with:\n $$ systemctl enable --now zpool-scrub@tank.timer"
 
 .PHONY: install
