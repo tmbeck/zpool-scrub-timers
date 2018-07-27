@@ -1,11 +1,18 @@
 # zpool-scrub
 
-systemd zpool scrub service and timer
+Scheduled zpool scrubbing with a systemd timer.
 
-## Installation
+## installation
 
-Run `make install` to install unit files and reload systemd daemon.
+Run `make install` to install unit files.
 
-Afterwards enable the timer, specifying your pool:
+Reload your systemd daemon with `systemctl daemon-reload`.
 
-    systemctl enable --now zpool-scrub@tank.timer
+Finally enable a timer, specifying your pool name (`tank` in this example). A monthly and a weekly
+timer are available.
+
+    systemctl enable --now zpool-scrub-monthly@tank.timer
+
+or
+
+    systemctl enable --now zpool-scrub-weekly@tank.timer
