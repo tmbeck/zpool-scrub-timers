@@ -1,14 +1,20 @@
+# where to install systemd units
+SYSTEMD := /etc/systemd/system
+MODE := -m 644 -o root -g root
 
-systemd = /etc/systemd/system
-mode = -m 644 -o root -g root
+# construct unit names
+NAME := zpool-scrub
+SUFFIXES := -weekly@.timer -monthly@.timer @.service
+UNITS := $(addprefix $(SYSTEMD)/$(NAME),$(SUFFIXES))
 
-help:
-	@echo "Please run 'make install' to install unit files and reload daemon."
+# not actually files
+.PHONY : install reload
 
-install:
-	install $(mode) zpool-scrub@.service $(systemd)
-	install $(mode) zpool-scrub@.timer   $(systemd)
-	systemctl daemon-reload
-	@echo -e "Now enable for pool 'tank' with:\n $$ systemctl enable --now zpool-scrub@tank.timer"
+install : $(UNITS)
+	@echo "Reload your systemd daemon if new files were installed:"
+	@echo " $$ systemctl daemon-reload"
+	@echo "Enable for zpool 'tank' with:"
+	@echo " $$ systemctl enable --now zpool-scrub-monthly@tank.timer"
 
-.PHONY: install
+$(SYSTEMD)/% : %
+	install $(MODE) $< $@
