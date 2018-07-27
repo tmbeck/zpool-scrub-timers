@@ -1,5 +1,5 @@
 [Unit]
-Description=Scrub ZFS Pool
+Description=Scrub ZFS pool %i
 Requires=zfs.target
 After=zfs.target
 
