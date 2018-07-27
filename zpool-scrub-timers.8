@@ -1,0 +1,71 @@
+.TH "ZPOOL\-SCRUB\-TIMERS" "8" "July 2018" "git-e698b70" "ZFS Utilities"
+.SH "NAME"
+\fBzpool-scrub-timers\fR \- scheduled zpool scrubbing
+.SH SYNOPSIS
+.P
+.RS 2
+.nf
+systemctl enable \-\-now zpool\-scrub\-monthly@tank\.timer
+.fi
+.RE
+.P
+or
+.P
+.RS 2
+.nf
+systemctl enable \-\-now zpool\-scrub\-weekly@tank\.timer
+.fi
+.RE
+.SH DESCRIPTION
+.P
+These unit files initiate a zpool scrub on a regular basis (weekly or monthly)\. For one\-off scrubs
+you should simply use \fBzpool scrub tank\fP, where \fBtank\fP is the pool to be scrubbed\.
+.P
+See \fBzpool(8)\fP for documentation of zpool subcommands\.
+.P
+See \fBzpool\-scrub\-timers(8)\fP to see this manual as a manpage\.
+.SH USAGE
+.P
+The only option to these timers is the pool name to be scrubbed\. If your pool name is \fBmypool\fP and
+you want to schedule weekly scrubs use
+.P
+.RS 2
+.nf
+systemctl enable \-\-now zpool\-scrub\-weekly@mypool\.timer
+.fi
+.RE
+.SH INSTALLATION
+.P
+After cloning the repository or downloading and extracting a release use \fBmake install\fP to install
+the unit files in \fB/etc/systemd/system\fP\|\.
+.P
+Afterwards reload your daemon with \fBsystemd daemon\-reload\fP and enable the desired timer (see
+OPTIONS)\.
+.SH EXAMPLE
+.P
+Clone the repository:
+.P
+.RS 2
+.nf
+mkdir \-p ~/src/zpool\-scrub
+cd ~/src/zpool\-scrub
+git clone https://git\.rz\.semjonov\.de/systemd/zpool\-scrub\.git \.
+.fi
+.RE
+.P
+Install unit files:
+.P
+.RS 2
+.nf
+make install
+.fi
+.RE
+.P
+Enable timer:
+.P
+.RS 2
+.nf
+systemctl enable \-\-now zpool\-scrub\-weekly@tank\.timer
+.fi
+.RE
+
