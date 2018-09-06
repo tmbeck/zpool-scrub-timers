@@ -1,36 +1,57 @@
-# where to install systemd units
+DESTDIR :=
 SYSTEMD := /etc/systemd/system
-MODE := -m 644 -o root -g root
-
-# construct unit names
-NAME := zpool-scrub
-SUFFIXES := -weekly@.timer -monthly@.timer @.service
-UNITS := $(addprefix $(SYSTEMD)/$(NAME),$(SUFFIXES))
-
-# manuals go here
 MANUALS := /usr/local/man
 
-# not actually files
-.PHONY : install install-man man
+# find zpool binary
+ZPOOL_BIN  := $(shell which zpool || echo /sbin/zpool)
 
-install : $(UNITS) install-man
-	@echo "Reload your systemd daemon if new files were installed:"
-	@echo " $$ systemctl daemon-reload"
-	@echo "Enable for zpool 'tank' with:"
-	@echo " $$ systemctl enable --now zpool-scrub-monthly@tank.timer"
+NAME     := zpool-scrub
+SERVICES := $(NAME)@.service
+TIMERS   := $(NAME)-weekly@.timer \
+						$(NAME)-monthly@.timer
 
-$(SYSTEMD)/% : %
-	install $(MODE) $< $@
+.PHONY : build install install-units install-man man
 
+# build systemd unit files
+build : $(TIMERS) $(SERVICES)
 
-man : $(NAME)-timers.8
-$(NAME)-timers.8 : README.md
+# render scheduled timers
+$(NAME)-%@.timer: $(NAME)@.timer.in
+	sed 's/@SCHEDULE@/$*/g' $< > $@
+
+# render service
+$(NAME)@.service: $(NAME)@.service.in
+	sed 's,@ZPOOL_BIN@,$(ZPOOL_BIN),g' $< > $@
+
+# install all files
+install : install-units install-man
+
+# install systemd units in system
+SYSTEMDDIR := $(DESTDIR)$(SYSTEMD)
+install-units : $(addprefix $(SYSTEMDDIR)/,$(SERVICES) $(TIMERS))
+$(SYSTEMDDIR) :
+	install -m 755 -d $@
+$(SYSTEMDDIR)/% : % $(SYSTEMDDIR)
+	install -m 644 $< $@
+
+# render manpage from markdown
+MANPAGE := $(NAME)-timers.8
+man : $(MANPAGE)
+$(MANPAGE) : README.md
 	marked-man \
 		--version git-$$(git describe --always --abbrev) \
 		--manual 'ZFS Utilities' \
 		$< > $@
 
-install-man : man $(MANUALS)/man8/$(NAME)-timers.8
-$(MANUALS)/man8/% : %
-	install -d $$(dirname $@)
-	install $(MODE) $< $@
+# install manpage in system
+MANPAGEDIR := $(DESTDIR)$(MANUALS)/man8
+install-man : $(MANPAGEDIR)/$(MANPAGE)
+$(MANPAGEDIR) :
+	install -m 755 -d $@
+$(MANPAGEDIR)/$(MANPAGE) : $(MANPAGE) $(MANPAGEDIR)
+	install -d $(@D)
+	install -m 644 $< $@
+	
+# clean built files
+clean:
+	rm -f $(TIMERS) $(SERVICES)

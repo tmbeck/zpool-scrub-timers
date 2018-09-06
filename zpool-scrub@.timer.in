@@ -1,8 +1,8 @@
 [Unit]
-Description=Scrub ZFS pool %i weekly
+Description=Scrub ZFS pool %i @SCHEDULE@
 
 [Timer]
-OnCalendar=weekly
+OnCalendar=@SCHEDULE@
 Persistent=true
 Unit=zpool-scrub@%i.service
 
