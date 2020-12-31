@@ -15,8 +15,6 @@ you should simply use `zpool scrub tank`, where `tank` is the pool to be scrubbe
 
 See `zpool(8)` for documentation of zpool subcommands.
 
-See `zpool-scrub-timers(8)` to see this manual as a manpage.
-
 ## USAGE
 
 The only option to these timers is the pool name to be scrubbed. If your pool name is `mypool` and
@@ -30,20 +28,20 @@ After cloning the repository or downloading and extracting a release use `make i
 the unit files in `/etc/systemd/system`.
 
 Afterwards reload your daemon with `systemd daemon-reload` and enable the desired timer (see
-OPTIONS).
+USAGE).
 
 ## EXAMPLE
 
 Clone the repository:
 
-    mkdir -p ~/src/zpool-scrub
-    cd ~/src/zpool-scrub
-    git clone https://git.rz.semjonov.de/systemd/zpool-scrub.git .
+    cd /tmp
+    git clone https://github.com/ansemjo/systemd-zpool-scrub-timers.git
+    cd systemd-zpool-scrub-timers/
 
 Install unit files:
 
-    make install
+    sudo make install
 
 Enable timer:
 
-    systemctl enable --now zpool-scrub-weekly@tank.timer
+    sudo systemctl enable --now zpool-scrub-weekly@tank.timer
