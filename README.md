@@ -1,3 +1,8 @@
+# DEPRECATED
+AUTOMATIC SCRUB TIMERS ARE IN OPENZFS UPSTREAM, see openzfs/zfs#12193 (released in zfs-2.1.3).
+
+Maintained here because [ProxMox](https://www.proxmox.com/en/) doesn't seem to include them from upstream (even with newer upstream versions, such as `zfs-2.1.7-pve1`).
+
 # zpool-scrub-timers(8) -- scheduled zpool scrubbing
 
 ## SYNOPSIS
@@ -35,13 +40,21 @@ USAGE).
 Clone the repository:
 
     cd /tmp
-    git clone https://github.com/ansemjo/systemd-zpool-scrub-timers.git
+    git clone https://github.com/tmbeck/systemd-zpool-scrub-timers.git
     cd systemd-zpool-scrub-timers/
 
 Install unit files:
 
     sudo make install
 
-Enable timer:
+Enable timer with your desired periodicity:
 
     sudo systemctl enable --now zpool-scrub-weekly@tank.timer
+
+or
+
+    sudo systemctl enable --now zpool-scrub-monthly@tank.timer
+
+or
+
+    sudo systemctl enable --now zpool-scrub-quarterly@tank.timer
