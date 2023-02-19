@@ -8,7 +8,8 @@ ZPOOL_BIN  := $(shell which zpool || echo /sbin/zpool)
 NAME     := zpool-scrub
 SERVICES := $(NAME)@.service
 TIMERS   := $(NAME)-weekly@.timer \
-						$(NAME)-monthly@.timer
+						$(NAME)-monthly@.timer \
+						$(NAME)-quarterly@.timer
 
 .PHONY : build install install-units install-man man
 
