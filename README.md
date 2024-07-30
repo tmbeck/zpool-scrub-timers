@@ -20,6 +20,8 @@ you should simply use `zpool scrub tank`, where `tank` is the pool to be scrubbe
 
 See `zpool(8)` for documentation of zpool subcommands.
 
+**Note** that some time ago `zfsutils` started packaging a cron job in `/etc/cron.d/zfsutils-linux`, which simply scrubs all pools on every 2nd Sunday of the month. So you might not actually *need* this separate unit anymore, unless you want finer granularity or just prefer to use a systemd timer.
+
 ## USAGE
 
 The only option to these timers is the pool name to be scrubbed. If your pool name is `mypool` and
